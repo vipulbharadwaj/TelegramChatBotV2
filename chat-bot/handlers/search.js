@@ -10,6 +10,7 @@ bot.command("search", (ctx) => {
     );
     return;
   }
+  
 
   // Add user to waiting list
   if (waitingUsers.includes(userId)) {

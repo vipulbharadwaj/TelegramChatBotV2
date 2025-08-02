@@ -4,9 +4,51 @@ const { showAgeKeyboard } = require("./setAge");
 const { showGenderKeyboard } = require("./gender");
 const { showPrefrenceKeyboard } = require("./preference");
 
+const feminineNames = [
+  "VelvetVixen", "LustBunny", "NaughtyNova", "SpicySiren", "ThiccSnack",
+  "MoanMuse", "KinkKitten", "SugarFreak", "DripQueen", "CurvyVibe",
+  "ToxicTemptress", "TeaseTrixie", "LatexLola", "BarelyLegal", "DominaDoll",
+  "SlayWitch", "ObeyQueen", "SinDiva", "StripTease", "ChokeMeCherry"
+];
+
+const masculineNames = [
+  "MidnightRider", "SinDealer", "HeatSeeker", "ThirstTrap", "FreakOnTop",
+  "HornyHero", "DesireDaddy", "BangBoss", "BodyBeast", "ChokeArtist",
+  "DeepStroke", "BeardAndBite", "RideKing", "DomDream", "NudeKing",
+  "AlphaTease", "SpankLord", "RawFantasy", "KissJunkie", "MoanMaker"
+];
+
+const neutralNames = [
+  "ShadowKisser", "LateNightLover", "WinkWhore", "FlirtMonster", "SmutBandit",
+  "DirtyDancer", "BootySaint", "AfterDark", "SlickWhisper", "NoPantsZone",
+  "XXXMuse", "BangTheory", "NightFever", "ChainsAndLace", "ThirstFiend",
+  "TouchAddict", "SirenSpank", "PillowThief", "ObsceneMuse", "RawLover"
+];
+
+const kinkyNames = [
+  "TieMeUp", "SpankBank", "GaggedGlory", "KnottySoul", "LatexAddict",
+  "WhipItGood", "DomSubDuo", "LeashLover", "SafeWordPlease", "MasterCrave",
+  "PainAndPleasure", "BallGagBabe", "CollaredCutie", "ObeyAndServe",
+  "LickTheWhip", "FlogMeDaddy", "DungeonDoll", "NippleTweak", "BondageBeast", "VelcroVibe"
+];
+
+
+const randomNames = [
+  ...feminineNames,
+  ...masculineNames,
+  ...neutralNames,
+  ...kinkyNames
+];
+
+function getNameFromId(id) {
+  const index = id % randomNames.length;
+  return randomNames[index];
+}
+
 module.exports = (bot) => {
   bot.command("settings", (ctx) => {
     const profile = getProfile(ctx.from.id);
+    
 
     //profileCard
     const settingsText = `
@@ -31,8 +73,7 @@ Here you can update your profile to help us find you the best match 💘
         Markup.button.callback("🎂 Age", "edit_age"),
         Markup.button.callback("💑 Partner Pref", "edit_preference"),
       ],
-      [Markup.button.callback("⬅️ Back", "close_menu"),
-      ],
+      [Markup.button.callback("⬅️ Back", "close_menu")],
     ]);
 
     ctx.replyWithMarkdown(settingsText, settingsKeyboard);
@@ -41,10 +82,11 @@ Here you can update your profile to help us find you the best match 💘
   // Handlers for inline button actions
   bot.action("show_profile", (ctx) => {
     const profile = getProfile(ctx.from.id);
+    const name = getNameFromId(ctx.from.id);
     const profileCard = `
   ✨ *PROFILE CARD* ✨
 
-   👤  *Name*: ${ctx.from.first_name}  
+   👤  *Name*: ${name}  
    🎂  *Age*: ${profile.age || "Not set"}  
    ♟️  *Gender*: ${profile.gender || "Not set"}  
    💞  *Seeks*: ${profile.preference || "Any"}
@@ -97,8 +139,7 @@ Here you can update your profile to help us find you the best match 💘
           { text: "🎂 Age", callback_data: "edit_age" },
           { text: "💑 Partner Pref", callback_data: "edit_preference" },
         ],
-        [Markup.button.callback("⬅️ Back", "close_menu"),
-      ],
+        [Markup.button.callback("⬅️ Back", "close_menu")],
       ],
     };
     ctx.editMessageText(settingsText, {
@@ -109,13 +150,13 @@ Here you can update your profile to help us find you the best match 💘
   });
 
   bot.action("close_menu", async (ctx) => {
-  try {
-    await ctx.deleteMessage();
-  } catch (err) {
-    console.error("Failed to delete message:", err.message);
-    ctx.answerCbQuery("❌ Couldn't close menu");
-  }
-});
+    try {
+      await ctx.deleteMessage();
+    } catch (err) {
+      console.error("Failed to delete message:", err.message);
+      ctx.answerCbQuery("❌ Couldn't close menu");
+    }
+  });
 };
 
 // Helper function for profile completion

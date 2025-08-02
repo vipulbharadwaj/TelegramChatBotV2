@@ -1,3 +1,7 @@
 const myBroadcastings = new Map();
+const aiUsers = new Map();
 
-module.exports = myBroadcastings;
+module.exports = {
+    myBroadcastings,
+    aiUsers,
+};

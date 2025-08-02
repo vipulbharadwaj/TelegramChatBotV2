@@ -15,6 +15,9 @@ const {registerPreferenceHandler} = require("./handlers/preference");
 const mybot = require("./handlers/me");
 const quote = require('./handlers/randomQuotes');
 const joke = require('./handlers/randomJokes');
+const sentiment = require("sentiment");
+const mood = require("./handlers/AIMode");
+
 
 const app = express();
 app.use(express.json());
@@ -27,7 +30,10 @@ bot.telegram.setMyCommands([
     { command: "help", description: "❓ Get help and info" },
     { command: "quotes", description: "💡 Inspire me with a random quote" },
      { command: "jokes", description: "😈 Tell me a joke" },
+    { command: "xmode", description: " 🫦 Turn ON flirty cutie" },
+  { command: "earthmode", description: "🚪 Turn OFF flirty cutie" },
     { command: "settings", description: "⚙️ Manage your settings" },
+   
 ]);
  
 
@@ -37,6 +43,7 @@ app.get("/", (req, res) => {
 });
 
 console.log("Bot is starting...");
+mood(bot);
 mybot(bot);
 quote(bot);
 joke(bot);
