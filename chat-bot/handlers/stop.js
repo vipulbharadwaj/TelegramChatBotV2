@@ -9,8 +9,8 @@ module.exports = (bot) => {
       if (partnerId) {
       delete activePairs[userId];
       delete activePairs[partnerId];
-      ctx.reply("You have ended the chat.");
-      bot.telegram.sendMessage(partnerId, "Your partner has ended the chat.\n Send /search to find a new partner.");
+      ctx.reply("You have ended the chat.\nYou can now search for a new partner using /search.");
+      bot.telegram.sendMessage(partnerId, "Your partner has ended the chat.\nSend /search to find a new partner.");
       console.log(`Session ended for user ${userId} and partner ${partnerId}`);
     } else {
       ctx.reply("You are not connected with anyone.\n Send /search to find a partner.");

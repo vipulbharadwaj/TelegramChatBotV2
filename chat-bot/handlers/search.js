@@ -11,10 +11,9 @@ bot.command("search", (ctx) => {
     return;
   }
   
-
   // Add user to waiting list
   if (waitingUsers.includes(userId)) {
-    ctx.reply("_You are already in the queue. Please wait for a partner._", { parse_mode: "Markdown" });
+    ctx.reply("_You are already in the queue.\nPlease wait for a partner._", { parse_mode: "Markdown" });
     return;
   }
 
@@ -25,11 +24,14 @@ bot.command("search", (ctx) => {
     activePairs[userId] = partnerId;
     activePairs[partnerId] = userId;
     ctx.reply(
-      `_You are now connected with partner.\nSend /stop to end the session._`, { parse_mode: "Markdown" }
-    );
+  `_You are now connected with a partner._\n\n_Send /stop to end the session\nSend /next to find a new partner_`, 
+  { parse_mode: "Markdown" }
+);
+
     bot.telegram.sendMessage(
       partnerId,
-      `_You are now connected with partner.\nSend /stop to end the session._`,{ parse_mode: "Markdown" }
+      `_You are now connected with a partner._\n\n_Send /stop to end the session\nSend /next to find a new partner_`, 
+  { parse_mode: "Markdown" }
     );
     console.log(`Paired: ${userId} <-> ${partnerId}`);
   } else {
@@ -38,7 +40,7 @@ bot.command("search", (ctx) => {
     console.log(
       `User ${userId} added to waiting list. Waiting users: ${waitingUsers.length}`
     );
-    ctx.reply("_Searching for partner\nPlease wait..._", { parse_mode: "Markdown" });
+    ctx.reply("_Searching for a partner Please wait..._", { parse_mode: "Markdown" });
   }
 });
 }

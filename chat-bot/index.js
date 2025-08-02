@@ -5,6 +5,7 @@ const express = require("express");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const startHandler = require("./handlers/start");
 const searchHandler = require("./handlers/search");
+const next = require("./handlers/next");
 const messageHandler = require("./handlers/message");
 const stopHandler = require("./handlers/stop");
 const { registerGenderHandler } = require("./handlers/gender");
@@ -17,9 +18,7 @@ const quote = require("./handlers/randomQuotes");
 const joke = require("./handlers/randomJokes");
 const sentiment = require("sentiment");
 const mood = require("./handlers/AIMode");
-const activePairs = require("./utils/queue").activePairs;
 
-const notifyOnRestart = require('./utils/queue').notifyOnRestart;
 
 const app = express();
 app.use(express.json());
@@ -28,6 +27,7 @@ app.use(express.json());
 bot.telegram.setMyCommands([
   { command: "start", description: "🚀 Start the bot" },
   { command: "search", description: "🔍 Find a partner" },
+  { command: "next", description: "🔄 Find a new partner" },
   { command: "stop", description: "🛑 Stop the current session" },
   { command: "help", description: "❓ Get help and info" },
   { command: "quotes", description: "💡 Inspire me with a random quote" },
@@ -37,9 +37,6 @@ bot.telegram.setMyCommands([
   { command: "settings", description: "⚙️ Manage your settings" },
 ]);
 
-(async () => {
-  await notifyOnRestart(bot, activePairs);
-})();
 
 app.get("/", (req, res) => {
   res.send("Bot is Alive!");
@@ -56,11 +53,13 @@ registerPreferenceHandler(bot);
 registerAgeHandler(bot);
 registerGenderHandler(bot);
 startHandler(bot);
+next(bot);
 searchHandler(bot);
 stopHandler(bot);
 messageHandler(bot);
 
-bot.launch();
+  bot.launch();
+
 console.log("Bot is running...");
 
 const PORT = process.env.PORT || 8000;
