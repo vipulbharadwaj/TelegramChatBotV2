@@ -6,7 +6,7 @@ bot.command("search", (ctx) => {
 
   if (activePairs[userId]) {
     ctx.reply(
-      "You are already paired with someone.\nUse /stop to end the current session."
+      "You are already connected with someone.\nSend /stop to end the current session."
     );
     return;
   }
@@ -25,11 +25,11 @@ bot.command("search", (ctx) => {
     activePairs[userId] = partnerId;
     activePairs[partnerId] = userId;
     ctx.reply(
-      `_You are now paired with partner.\nUse /stop to end the session._`, { parse_mode: "Markdown" }
+      `_You are now connected with partner.\nSend /stop to end the session._`, { parse_mode: "Markdown" }
     );
     bot.telegram.sendMessage(
       partnerId,
-      `_You are now paired with partner.\nUse /stop to end the session._`,{ parse_mode: "Markdown" }
+      `_You are now connected with partner.\nSend /stop to end the session._`,{ parse_mode: "Markdown" }
     );
     console.log(`Paired: ${userId} <-> ${partnerId}`);
   } else {
