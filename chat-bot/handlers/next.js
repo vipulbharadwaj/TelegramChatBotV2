@@ -7,19 +7,15 @@ module.exports = (bot) => {
     const userId = ctx.from.id;
 
     try {
-      await cleanUpUser(bot, ctx);
-      //push agaiin to the waiting queue;
-      if (!waitingUsers.includes(userId)) {
-        waitingUsers.push(userId);
-        console.log(`User ${userId} added back to waiting list.`);
-        await ctx.reply("🔄 Searching for a new partner...");
-        matchUser(bot, ctx, userId);
-      } else {
+      if (waitingUsers.includes(userId) && !activePairs[userId]) {
         await ctx.reply(
-          "🔎 Looking for a partner... Please hold on while we find someone for you."
+          "⏳ Please wait, we're still searching for someone to connect you with..."
         );
-        console.log(`User ${userId} is already in the waiting list.`);
+        return; 
       }
+      ctx.state.searchingMode = "NEXT";
+      await cleanUpUser(bot, ctx);
+      await matchUser(bot, ctx, userId, true);
     } catch (error) {
       console.error(`❌ Error in /next for user ${userId}:`, error.message);
       //ctx.reply("An error occurred. Please try again.");

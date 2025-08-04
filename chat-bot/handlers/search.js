@@ -2,7 +2,7 @@ const {waitingUsers, activePairs} = require('../utils/queue');
 const matchUser = require('./matchMaking');
 
 module.exports = (bot) => {
-bot.command("search", (ctx) => {
+bot.command("search", async(ctx) => {
   const userId = ctx.from.id;
 
   if (activePairs[userId]) {
@@ -20,7 +20,7 @@ bot.command("search", (ctx) => {
 
   // Check if there is a waiting user to pair with
   try {
-      matchUser(bot, ctx, userId);
+      await matchUser(bot, ctx, userId);
     } catch (error) {
       console.error(`❌ Error in /search for user ${userId}:`, error);
       ctx.reply("Calm down...");
