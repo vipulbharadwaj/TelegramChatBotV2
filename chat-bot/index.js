@@ -23,6 +23,7 @@ const mood = require("./handlers/AIMode");
 const app = express();
 app.use(express.json());
 
+
 //menu button
 bot.telegram.setMyCommands([
   { command: "start", description: "🚀 Start the bot" },
@@ -58,11 +59,30 @@ searchHandler(bot);
 stopHandler(bot);
 messageHandler(bot);
 
-  bot.launch();
+  //bot.launch();
 
-console.log("Bot is running...");
+  // Register bot webhook with Telegram
 
+const WEBHOOK_PATH = "/telegram-webhook";
+const WEBHOOK_URL = "https://vichatbotv2.onrender.com" + WEBHOOK_PATH;
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log("Server is running on http://localhost:8000");
-});
+(async () => {
+  try {
+    console.log("Registering webhook with Telegram...");
+    await bot.telegram.setWebhook(WEBHOOK_URL);
+    console.log(`✅ Webhook registered at: ${WEBHOOK_URL}`);
+
+    // Middleware for webhook handling
+    app.use(bot.webhookCallback(WEBHOOK_PATH));
+
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running at http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Error setting webhook:", err.message);
+    process.exit(1);
+  }
+})();
+
+
