@@ -61,28 +61,28 @@ messageHandler(bot);
 
 
   // Register bot webhook with Telegram
-  bot.launch();
+ // bot.launch();
 
-// const WEBHOOK_PATH = "/telegram-webhook";
-// const WEBHOOK_URL = `https://vichatbotv2.onrender.com${WEBHOOK_PATH}`;
-// const PORT = process.env.PORT || 8000;
-// (async () => {
-//   try {
-//     console.log("Registering webhook with Telegram...");
-//     await bot.telegram.setWebhook(WEBHOOK_URL);
-//     console.log(`✅ Webhook registered at: ${WEBHOOK_URL}`);
+const WEBHOOK_PATH = "/telegram-webhook";
+const WEBHOOK_URL = `https://vichatbotv2.onrender.com${WEBHOOK_PATH}`;
+const PORT = process.env.PORT || 8000;
+(async () => {
+  try {
+    console.log("Registering webhook with Telegram...");
+    await bot.telegram.setWebhook(WEBHOOK_URL);
+    console.log(`✅ Webhook registered at: ${WEBHOOK_URL}`);
 
-//     // Middleware for webhook handling
-//     app.use(bot.webhookCallback(WEBHOOK_PATH));
+    // Middleware for webhook handling
+    app.use(bot.webhookCallback(WEBHOOK_PATH));
 
-//     // Start the server
-//     app.listen(PORT, () => {
-//       console.log(`🚀 Server is running at http://localhost:${PORT}`);
-//     });
-//   } catch (err) {
-//     console.error("❌ Error setting webhook:", err.message);
-//     process.exit(1);
-//   }
-// })();
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running at http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Error setting webhook:", err.message);
+    process.exit(1);
+  }
+})();
 
 
