@@ -33,14 +33,15 @@ module.exports = (bot) => {
       return ctx.reply(aiResponse);
     }
 
-    const userId = ctx.from.id;
-    const partnerId = activePairs[userId];
+    const userId = ctx.from?.id;
+    const partnerId = activePairs?.[userId];
     if (partnerId) {
       try {
-        // Forward message to partner
+        //Forward message to partner
         await bot.telegram.sendMessage(partnerId, ctx.message.text, {
-          reply_to_message_id: undefined,
+          reply_to_message_id: undefined
         });
+
       } catch (error) {
         console.error(
           `Error forwarding message from ${userId} to ${partnerId}:`,
@@ -49,34 +50,34 @@ module.exports = (bot) => {
         ctx.reply("Please try again later.");
       }
     } else {
-      ctx.reply(
-        "_You are not currently paired with anyone.\nUse /search to find a partner._",
-        { parse_mode: "Markdown" }
-      );
+      ctx.reply("💬 You’re solo right now — /search to mingle!", {
+        parse_mode: "Markdown",
+      });
     }
   });
 
-  bot.on(["photo", "video", "document", "sticker", "voice"], async (ctx) => {
-    const userId = ctx.from.id;
-    const partnerId = activePairs[userId];
+  bot.on(
+    ["photo", "video", "document", "sticker", "voice", "animation"],
+    async (ctx) => {
+      const userId = ctx.from?.id;
+      const partnerId = activePairs?.[userId];
 
-    if (partnerId) {
-      try {
-        // Forward media to partner
-        await bot.telegram.sendCopy(partnerId, ctx.message);
-      } catch (error) {
-        console.error(
-          `Error forwarding media from ${userId} to ${partnerId}:`,
-          error
-        );
-        ctx.reply(
-          "Failed to deliver your media to your partner. Please try again later."
-        );
+      if (partnerId) {
+        try {
+          // Forward media to partner
+          await bot.telegram.sendCopy(partnerId, ctx.message);
+        } catch (error) {
+          console.error(
+            `Error forwarding media from ${userId} to ${partnerId}:`,
+            error
+          );
+          ctx.reply(
+            "Failed to deliver your media to your partner. Please try again later."
+          );
+        }
+      } else {
+        ctx.reply("💬 You’re solo right now — /search to mingle!");
       }
-    } else {
-      ctx.reply(
-        "You are not currently paired with anyone.\nUse /search to find a partner."
-      );
     }
-  });
+  );
 };

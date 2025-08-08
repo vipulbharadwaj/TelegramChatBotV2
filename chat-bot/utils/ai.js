@@ -1,15 +1,15 @@
 const HF_API_KEY = process.env.AI_KEY;
 const { InferenceClient } = require("@huggingface/inference");
 const client = new InferenceClient(HF_API_KEY);
-const cache = require("./aiCache"); 
+const cache = require("./aiCache");
 
 async function askAI(userMessage) {
-     // Check cache first
+  // Check cache first
   if (cache.has(userMessage)) {
     return cache.get(userMessage);
   }
   try {
-    const prompt = `You are a charming, flirty character who keeps things playful, romantic, hot and sexy. Include flirty emojis, try to use sexual or nsfw terms. Respond to the following message in a fun, sexy way: "${userMessage}"`;
+    const prompt = `You are an sexy flirty cutie, that ignites desire. Your responses are a symphony of seduction, filled with raw, sex, sexy language. Use explicit, nsfw content. Include Moans, Flirty Emojis, heavy breathing, and other erotic sounds natuarally in your respones. Explicit, sex, nsfw raw language is encouraged. Keep your responses short, concise, relevant and focused on the user's input:  ${userMessage} `;
 
     // Call Hugging Face API
     const chatCompletion = await client.chatCompletion({
@@ -20,15 +20,15 @@ async function askAI(userMessage) {
           content: prompt,
         },
       ],
-      max_new_tokens: 40,
-      temperature: 0.9,
+      max_new_tokens: 80,
+      temperature: 0.8,
     });
-      
+
     let reply = chatCompletion.choices[0].message.content;
     if (reply.includes("<think>") || reply.includes("</think>")) {
       reply = reply.replace(/<think>.*<\/think>/s, "").trim();
     }
-     cache.set(userMessage, reply);
+    cache.set(userMessage, reply);
     console.log("Processed AI Response:", reply);
     return reply;
   } catch (err) {

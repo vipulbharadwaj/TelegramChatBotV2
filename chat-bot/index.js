@@ -18,6 +18,7 @@ const quote = require("./handlers/randomQuotes");
 const joke = require("./handlers/randomJokes");
 const sentiment = require("sentiment");
 const mood = require("./handlers/AIMode");
+const report = require("./handlers/report");
 
 
 const app = express();
@@ -28,6 +29,7 @@ app.use(express.json());
 bot.telegram.setMyCommands([
   { command: "start", description: "🚀 Start the bot" },
   { command: "search", description: "🔍 Find a partner" },
+   { command: "report", description: "🚩 Report your chat partner for inappropriate behavior" },
   { command: "next", description: "🔄 Find a new partner" },
   { command: "stop", description: "🛑 Stop the current session" },
   { command: "help", description: "❓ Get help and info" },
@@ -46,6 +48,7 @@ app.get("/", (req, res) => {
 console.log("Bot is starting...");
 mood(bot);
 mybot(bot);
+report(bot);
 quote(bot);
 joke(bot);
 helpHandler(bot);
@@ -66,6 +69,7 @@ messageHandler(bot);
 const WEBHOOK_PATH = "/telegram-webhook";
 const WEBHOOK_URL = `https://vichatbotv2.onrender.com${WEBHOOK_PATH}`;
 const PORT = process.env.PORT || 8000;
+
 (async () => {
   try {
     console.log("Registering webhook with Telegram...");
@@ -84,5 +88,6 @@ const PORT = process.env.PORT || 8000;
     process.exit(1);
   }
 })();
+
 
 

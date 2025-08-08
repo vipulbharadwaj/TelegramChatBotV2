@@ -6,6 +6,7 @@ const cleanUpUser = async(bot, ctx)=>{
 
     const skipNotPaired = ctx.state.searchingMode === "NEXT";
 
+
     try {
       if (partnerId) {
       delete activePairs[userId];
@@ -14,7 +15,7 @@ const cleanUpUser = async(bot, ctx)=>{
       await bot.telegram.sendMessage(partnerId, "⚠️ Your partner has ended the chat.\nSend /search to find new partner.");
       console.log(`Session ended for user ${userId} and partner ${partnerId}`);
     } else if(!skipNotPaired) {
-      await ctx.reply("You are not connected with anyone.\nSend /search to find a partner.");
+      await ctx.reply("🌟 Partner not found... try /search!");
     }
 
     // Remove user from waiting list if they were waiting
