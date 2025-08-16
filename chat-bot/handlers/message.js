@@ -39,9 +39,8 @@ module.exports = (bot) => {
       try {
         //Forward message to partner
         await bot.telegram.sendMessage(partnerId, ctx.message.text, {
-          reply_to_message_id: undefined
+          reply_to_message_id: undefined,
         });
-
       } catch (error) {
         console.error(
           `Error forwarding message from ${userId} to ${partnerId}:`,
@@ -61,6 +60,24 @@ module.exports = (bot) => {
     async (ctx) => {
       const userId = ctx.from?.id;
       const partnerId = activePairs?.[userId];
+
+      if (myBroadcastings.get(myId)) {
+      myBroadcastings.delete(myId);
+      const msg = ctx.message;
+
+      const snapshot = await db.collection("users").get();
+      const users = snapshot.docs.map((doc) => doc.data().chatId);
+
+      for (const chatId of users) {
+        try {
+          await ctx.telegram.sendCopy(chatId, msg);
+        } catch (error) {
+          console.error(`❌ Failed to send to ${chatId}:`, error.message);
+        }
+      }
+
+      return ctx.reply("✅ Message broadcasted to all users.");
+    }
 
       if (partnerId) {
         try {
